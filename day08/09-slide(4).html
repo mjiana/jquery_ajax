@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>slide(4)</title>
+
+		<!-- 모바일 웹 페이지 설정 -->
+	<link rel="shortcut icon" href="img/icon.png" />
+	<link rel="apple-touch-icon" href="img/icon.png" />
+	<!-- 모바일 웹 페이지 설정 끝 -->
+	
+	<!--[if lt IE 9]>
+	<script src="js/html5shiv.js"></script>
+	<![endif]-->
+	
+	<!-- 공통 css -->
+	<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+	<link rel="stylesheet" type="text/css" href="css/common.css"/>
+	
+	<!-- jQuery Framework 참조하기 -->
+	<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+	<!-- slide Plugin -->
+	<script type="text/javascript" src="js/jquery.slides.min.js"></script>
+	<!-- plugin CSS -->
+	<link rel="stylesheet" type="text/css" href="css/navigation.css"/>
+	<!-- 사용자 정의 스크립트 부분 -->
+	<script type="text/javascript">
+	$(function(){
+		$("#slides").slidesjs({
+			width: 800,
+			height: 300,
+			effect: {
+				slide: {
+					speed:200
+				}
+			},
+			callback :{
+				loaded: function(number){
+					$('h1.title').html(number+"번 이미지 로드");
+				},
+				start: function(number){
+					$('h1.title').html(number+"번 이미지 애니메이션 시작");
+				},
+				complete: function(number){
+					$('h1.title').html(number+"번 이미지 애니메이션 종료");
+				}
+			}
+		});
+	});
+	</script>
+</head>
+<body>
+	<h1 class="title">Image Slider(4)</h1>
+	<div class="example">
+		<div id="slides">
+			<img src="img/slide-1.jpg">
+			<img src="img/slide-2.jpg">
+			<img src="img/slide-3.jpg">
+			<img src="img/slide-4.jpg">
+		</div>
+	</div>
+</body>
+</html>

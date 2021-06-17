@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>login</title>
+
+	<!-- 모바일 웹 페이지 설정 -->
+	<link rel="shortcut icon" href="img/icon.png" />
+	<link rel="apple-touch-icon" href="img/icon.png" />
+	<!-- 모바일 웹 페이지 설정 끝 -->
+
+	<!--[if lt IE 9]>
+	<script src="js/html5shiv.js"></script>
+	<![endif]-->
+
+	<style type="text/css">
+		/* 전체 여백 초기화, 기본 글자색 지정 */
+		* {
+			padding: 0; margin:0; color:#333; 
+			font-family: arial,굴림;
+		}
+		
+		/* 폼 영역의 크기 및 테두리 */
+		#login fieldset{ 
+			width: 270px; padding:15px; 
+			border: 1px solid #7BAEB5; position: relative;
+			left: 50px; top: 40px; 
+		}
+		#login fieldset legend { 
+			display: none; 
+		}
+		
+		/* 입력항목의 제목 */
+		#login label{ 
+			display:inline-block; width: 80px; font-size:14px;
+			font-weight: bold; padding-left: 10px; margin-bottom: 10px; 
+		}
+		
+		/* 기본 입력박스의 형태 */
+		#login input[type='text'], #login input[type='password']{
+			border: 1px solid #ccc; padding: 3px 10px; width: 150px; 
+			vertical-align: middle; font-size: 12px; line-height: 150%; 
+		}
+		
+		/* 버튼의 크기 */
+		#login input[type='submit'] { 
+			width: 265px; height: 30px; 
+		}
+		
+		/* 활성화 된 input 스타일 */
+		.active{ 
+			border: 1px solid #7BAEB5 !important; background-color: #BEEFFF; 
+		}
+		
+		/* 로딩박스, 배경색상 투명도는 IE8이하 미지원 */	
+		#login{ 
+			position: relative; 
+		}
+		#login fieldset .loader{ 
+			position: absolute; left: 0; top: 0; 
+			width: 100%; height: 100%; 
+			background-color: rgba(0,0,0,0.3); display: none;
+		}
+		
+		/* 로딩박스 안 이미지 가운데 배치*/	
+		#login .loader img{ 
+			position: absolute; left: 50%; top: 50%; 
+			margin-left: -5px; margin-top: -5px;
+		}	
+	</style>
+
+	<!-- jQuery Framework 참조하기 -->
+	<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+	<!-- 사용자 스크립트 블록 -->
+	<script type="text/javascript">
+		$( function(){
+			//#user_name요소와 #user_password 요소에 대한 focus, blur 이벤트 처리
+			$("#user_name, #user_password").bind({
+				"focus" : function() {
+					$(this).addClass("active");
+				},
+				"blur" : function(){
+					$(this).removeClass("active");
+				}
+			});
+			//폼에 대한 submit 처리, 유효성 검사
+			$("#login").bind("submit", function(){
+				if(!$("#user_name").val()){
+					alert("아이디를 입력하세요");
+					$("#user_name").focus();
+					return false;
+				}
+				if(!$("#user_password").val()){
+					alert("비밀번호를 입력하세요");
+					$("#user_password").focus();
+					return false;
+				}
+				$("#login .loader").show();
+				
+				//가능하면 ajax로 로그인 처리
+				//로그인 가정 : 1초 후  로딩화면 닫힘 처리
+				setTimeout(function() {
+					alert("Hello "+$("#user_name").val());
+					$("#login .loader").hide();
+				}, 1000);
+				
+				return false;
+			});
+		});
+	</script>
+</head>
+<body>
+	<form id="login">
+		<fieldset>
+			<legend>Login</legend>
+			<div>
+				<label for="user_name">아이디</label>
+				<input type="text" name="user_name" id="user_name">
+			</div>
+			<div>
+				<label for="user_password">비밀번호</label>
+				<input type="password" name="user_password" id="user_password">
+			</div>
+			<div>
+				<input type="submit" value="로그인">
+			</div>
+			<div class="loader"><img src="img/loader.gif"/></div>
+		</fieldset>
+	</form>
+</body>
+</html>

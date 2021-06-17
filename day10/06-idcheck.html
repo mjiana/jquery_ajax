@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>idcheck</title>
+
+		<!-- 모바일 웹 페이지 설정 -->
+		<link rel="shortcut icon" href="img/icon.png" />
+		<link rel="apple-touch-icon" href="img/icon.png" />
+		<!-- 모바일 웹 페이지 설정 끝 -->
+
+		<!--[if lt IE 9]>
+		<script src="js/html5shiv.js"></script>
+		<![endif]-->
+
+		<!-- 공통 css -->
+		<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="css/common.css"/>
+
+		<!-- jQuery Framework 참조하기 -->
+		<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+
+		<!-- 사용자 스크립트 블록 -->
+		<script type="text/javascript">
+			$(function(){
+				//id값이 checkid인 요소에 대한 click이벤트 정의
+				$("#checkid").click(function(){
+					//입력값 얻기
+					var input = $("input[name='user_id']");
+					
+					//입력 여부 검사
+					if(!input.val()){
+						alert("아이디를 입력하세요");
+						$(input).focus();
+						return false
+					}
+					
+					/* 데이터 파일 URL 설정 */
+					//실습용 URL - 모든 아이디 허용
+					//var url = "ajax/idcheck/idcheck_ok.xml";
+					//실습용 URL - 모든 아이디 불가
+					//var url = "ajax/idcheck/idcheck_fail.xml";
+					//웹프로그래밍 연동 - JSP
+					var url = "ajax/idcheck/idcheck.jsp";
+					
+					//ajax get방식 연동
+					$.get(url, {
+						"user_id":input.val()
+					}, function(data){
+						/* xml데이터를 읽었을 때 이 함수의 파라미터는 xml-dom형태로,
+							데이터 추출방법은 $.ajax()함수와 동일하다. */
+						//데이터 로드에 성공한 경우 xml에서 "result"태그값 추출
+						var result_text = $(data).find("result").text();
+						//result_text는 문자열이므로 eval함수로 boolean형으로 변환
+						var result = eval(result_text);
+						
+						//결과 출력
+						if(result){
+							$(".console").html("<span style='color:blue'>사용할 수 있는 아이디입니다.</span>");
+						}else{
+							$(".console").html("<span style='color:red'>사용할 수 없는 아이디입니다.</span>")
+						}
+					});
+				});	
+			});
+		</script>
+
+	</head>
+	<body>
+		<h1 class="title">아이디 중복검사</h1>
+		<div class="exec">
+			<form>
+				<input type="text" name="user_id" />
+				<input type="button" id="checkid" value="중복검사" />
+			</form>
+		</div>
+		<div class="console"></div>
+	</body>
+</html>
+

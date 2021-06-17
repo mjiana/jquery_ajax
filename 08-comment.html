@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>comment</title>
+
+		<!-- 모바일 웹 페이지 설정 -->
+		<link rel="shortcut icon" href="img/icon.png" />
+		<link rel="apple-touch-icon" href="img/icon.png" />
+		<!-- 모바일 웹 페이지 설정 끝 -->
+
+		<!--[if lt IE 9]>
+		<script src="js/html5shiv.js"></script>
+		<![endif]-->
+
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+				color: #333;
+			}
+
+			ul {
+				list-style: none;
+			}
+
+			#container {
+				padding: 30px 20px;
+			}
+
+			h1 {
+				font-size: large;
+				border-left: 10px solid #7BAEB5;
+				border-bottom: 1px solid #7BAEB5;
+				padding: 10px;
+				width: auto;
+			}
+
+			#comment_write {
+				padding: 20px 15px;
+				border-bottom: 1px solid #7BAEB5;
+			}
+
+			#comment_write label {
+				display: inline-block;
+				width: 80px;
+				font-size: 14px;
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
+
+			#comment_write input[type='text'], #comment_write textarea {
+				border: 1px solid #ccc;
+				vertical-align: middle;
+				padding: 3px 10px;
+				font-size: 12px;
+				line-height: 150%;
+			}
+
+			#comment_write textarea {
+				width: 380px;
+				height: 90px
+			}
+
+			.comment_item {
+				font-size: 13px;
+				color: #333;
+				padding: 15px;
+				border-bottom: 1px dotted #ccc;
+				line-height: 150%;
+			}
+
+			.comment_item .writer {
+				color: #555;
+				line-height: 200%;
+			}
+
+			.comment_item .writer input {
+				vertical-align: middle;
+			}
+
+			.comment_item .writer .name {
+				color: #222;
+				font-weight: bold;
+				font-size: 14px;
+			}
+		</style>
+
+		<!-- jQuery Framework 참조하기 -->
+		<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+
+		<!-- 사용자 스크립트 블록 -->
+		<script type="text/javascript">
+			/* 새로운 글을 화면에 추가하기 위한 함수
+				num : 글번호
+				writer : 작성자
+				content : 덧글내용
+				datetime : 작성일시
+			*/
+			function addNewItem(num, writer, content, datetime){
+				//새로운 글 li태그 객체
+				var new_li = $("<li>");
+				new_li.attr("data-num", num);
+				new_li.addClass("comment_item");
+				
+				//작성자정보 p태그
+				var writer_p = $("<p>");
+				writer_p.addClass("writer");
+				
+				//번호
+				var num_span = $("<span>");
+				num_span.html(num+". ");
+				
+				//작성자 정보 이름
+				var name_span = $("<span>");
+				name_span.addClass("name");
+				name_span.html(writer+" 님");
+				
+				//작성일시
+				var date_span = $("<span>");
+				date_span.html(" / "+ datetime + " ");
+				
+				//삭제버튼
+				var del_input = $("<input>");
+				del_input.attr({"type":"button", "value":"삭제하기"});
+				del_input.addClass("delete_btn");
+				
+				//내용
+				var content_p = $("<p>");
+				content_p.html(content);
+				
+				//조립
+				writer_p.append(num_span).append(name_span).append(date_span).append(del_input);
+				new_li.append(writer_p).append(content_p);
+				$("#comment_list").append(new_li);
+			}
+			
+			$(function(){
+				//기본 덧글 목록 불러오기
+				$.get("ajax/comment/comment_list.xml", {}, function(data){
+					//읽은 xml에서 "item"태그를 찾아 반복처리
+					$(data).find("item").each(function(){
+						var num = $(this).find("num").text();
+						var writer = $(this).find("writer").text();
+						var content = $(this).find("content").text();
+						var datetime = $(this).find("datetime").text();
+						addNewItem(num, writer, content, datetime);
+					});
+				}).fail(function(){
+					alert("덧글목록 로딩 실패");
+				});
+				
+				//덧글 내용 저장
+				$("#comment_form").submit(function(){
+					//작성자 이름 입력검사
+					if(!$("#user_name").val()){
+						alert("작성자를 입력하세요.");
+						$("#user_name").focus();
+						return false;
+					}
+					//내용 입력검사
+					if(!$("#comment").val()){
+						alert("내용을 입력하세요.");
+						$("#comment").focus();
+						return false;
+					}
+					
+					/* 덧글쓰기 테스트 */
+					/* 무조건 성공 */
+					//var url = "ajax/comment/comment_write_ok.xml";
+					/* 무조건 실패 */
+					//var url = "ajax/comment/comment_write_fail.xml";
+					/* JSP */
+					var url = "ajax/comment/comment_write.jsp";
+					
+					//글 저장 post방식의 ajax
+					$.post(url, $(this).serialize(), function(xml){
+						//xml result 태그 값 추출, boolean형변환
+						var result = eval($(xml).find("result").text());
+						//결과가 저장실패인경우 에러메세지 출력 후 처리중단
+						if(!result){
+							alert($(xml).find("message").text());
+							return false;
+						}
+						
+						//저장된 결과 추출
+						var num = $(xml).find("num").text();
+						var writer = $(xml).find("writer").text();
+						var content = $(xml).find("content").text();
+						var datetime = $(xml).find("datetime").text();
+						
+						//결과 새 목록으로 출력
+						addNewItem(num, writer, content, datetime);
+						alert("글 등록번호 : "+num);
+					}).fail(function(){
+						alert("덧글 작성에 실패하였습니다.");
+					});
+					return false;
+				});
+				
+				//삭제버튼 클릭시 항목삭제 "미리" 지정
+				$(document).on("click",".delete_btn",function(){
+					if(confirm("삭제하시겠습니까?")){
+						/* 덧글삭제  테스트 */
+						/* 무조건 성공 */
+						//var url = "ajax/comment/comment_delete_ok.xml";
+						/* 무조건 실패 */
+						//var url = "ajax/comment/comment_delete_fail.xml";
+						/* JSP */
+						var url = "ajax/comment/comment_delete.jsp";
+						
+						//글번호 얻기
+						var num = $(this).parent("li").attr("data-num");
+						//삭제 제거대상 : 클릭된 버튼 기준 "content-item"클래스를 갖는 상위요소
+						var target = $(this).parents(".comment_item");
+						
+						alert("삭제할 번호 : "+num+"/"+target);
+						//글번호를 통한 삭제 요청
+						$.post(url, {"num":num}, function(xml){
+							//result -> boolean
+							var result = eval($(xml).find("result").text());
+							var message = $(xml).find("message").text();
+							alert(message);
+							
+							//삭제 성공 시 삭제대상요소 화면에서 제거
+							if(result){
+								target.remove();
+							}
+						}).fail(function(){
+							alert("덧글 삭제에 실패하였습니다.");
+						});
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="container">
+			<h1>jQuery Comment</h1>
+			<div id="comment_write">
+				<form id="comment_form">
+					<div>
+						<label for="user_name">작성자</label>
+						<input type="text" name="user_name" id="user_name" />
+						<input type="submit" value="저장하기" />
+					</div>
+					<div>
+						<label for="comment">덧글 내용</label>
+						<textarea name="comment" id="comment"></textarea>
+					</div>
+				</form>
+			</div>
+			<ul id="comment_list">
+				<!-- 여기에 동적 생성 요소가 들어가게 됩니다. -->
+			</ul>
+		</div>
+	</body>
+</html>
