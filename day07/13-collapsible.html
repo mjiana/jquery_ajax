@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>collapsible</title>
+
+		<!-- 모바일 웹 페이지 설정 -->
+		<link rel="shortcut icon" href="img/icon.png" />
+		<link rel="apple-touch-icon" href="img/icon.png" />
+		<!-- 모바일 웹 페이지 설정 끝 -->
+
+		<!--[if lt IE 9]>
+		<script src="js/html5shiv.js"></script>
+		<![endif]-->
+
+		<style type="text/css">
+			/* 배경지정 */
+			body{ background: #252422; }
+			
+			/* 목록스타일 초기화 및 중앙 배치, 가로폭 지정 */
+			ul{ padding: 0; margin: 50px auto; list-style: none; width: 800px; }
+			
+			/* 제목 영역의 초기화 처리 */
+			.title{ padding: 0; margin: 0;}
+			
+			/* 링크 클릭영역 확대 및 배경, 폰트 설정 */
+			.title > a{
+				display: block; padding-top: 12px; 
+				font-size: 14px; text-indent: 12px;
+				text-decoration: none; font-weight: bold;
+				color: white; height: 23px; background: url("img/background.jpg");
+			}
+			
+			/* 현재 활성화된 요소에 적용할 배경 지정 */
+			.selected{ background: url("img/background-selected.jpg") !important; }
+			
+			/* 내용영역 */
+			.content{
+				margin: 0; background: #d4d0c8;
+				padding: 10px; height: 200px; overflow-y: auto;
+			}
+		</style>
+
+		<!-- jQuery Framework 참조하기 -->
+		<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+		<!-- 사용자 스크립트 블록 -->
+		<script type="text/javascript">
+			$(function(){
+				/* 첫번째 항목이 펼쳐져있도록 처리, 
+					탭의 내용은 첫번째 항목 안 a태그의 txt파일을 읽어서 출력 */
+				//초기화처리
+				$(".collapsible:eq(0) > .content").load(
+						$(".collapsible:eq(0) > .title a").attr("href"));
+				
+				//첫번째 항목의 a에게 selected클래스 적용
+				$(".collapsible:eq(0) a").addClass("selected");
+				
+				//첫번째 항목 외 다른 항목들의 content는 숨김처리
+				$(".collapsible").not(":eq(0)").find(".content").hide();
+				
+				/* 링크 클릭 이벤트 */
+				$(".collapsible .title a").click(function(){
+					//클릭된 자기자신은 selected클래스 적용, 이미 적용된 상태면 제거
+					$(this).toggleClass("selected");
+					
+					//자신을 제외한 나머지 링크들의 selected 클래스 제거
+					$(".collapsible .title a").not(this).removeClass("selected");
+					
+					//펼칠 대상 검색
+					var target = $(this).parents(".collapsible").find(".content");
+					
+					//나머지 대상 검색
+					var other = $(".collapsible .title a").not(this).parents(".collapsible").find(".content");
+					
+					//애니메이션으로 열고닫기 처리
+					target.slideToggle(300);
+					other.slideUp(300);
+					
+					//현재 클릭된 항목이 열린 상태라면 내용 불러와서 출력
+					if(target.css("display") != "none"){
+						target.load($(this).attr("href"));
+					}
+					
+					//링크의 페이지 이동 중지
+					return false;
+				});
+			});
+		</script>
+
+	</head>
+
+	<body>
+		<ul>
+			<li class="collapsible">
+				<h2 class="title"><a href="txt/html5.txt">HTML5</a></h2>
+				<p class="content"></p>
+			</li>
+			<li class="collapsible">
+				<h2 class="title"><a href="txt/jquery.txt">jQuery</a></h2>
+				<p class="content"></p>
+			</li>
+			<li class="collapsible">
+				<h2 class="title"><a href="txt/bootstrap.txt">Bootstrap3</a></h2>
+				<p class="content"></p>
+			</li>
+		</ul>
+	</body>
+</html>

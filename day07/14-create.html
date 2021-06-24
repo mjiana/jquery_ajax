@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>create</title>
+
+		<!-- 모바일 웹 페이지 설정 -->
+		<link rel="shortcut icon" href="img/icon.png" />
+		<link rel="apple-touch-icon" href="img/icon.png" />
+		<!-- 모바일 웹 페이지 설정 끝 -->
+
+		<!--[if lt IE 9]>
+		<script src="js/html5shiv.js"></script>
+		<![endif]-->
+
+		<!-- jQuery Framework 참조하기 -->
+		<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+		<!-- 사용자 스크립트 블록 -->
+		<script type="text/javascript">
+			$(function(){
+				//추가된 동적요소의 수 카운트용 전역변수
+				var i = 1;
+				
+				$("input:eq(0)").click(function(){
+					//새로운 요소의 생성
+					var li1 = $("<li>").css("color", "red").html("추가항목"+(i++));
+					var li2 = $("<li>").css("color", "green").html("추가항목"+(i++));
+					var li3 = $("<li>").css("color", "blue").html("추가항목"+(i++));
+					
+					//remove() : 해당요소 삭제
+					li1.click(function(){
+						$(this).remove();
+					});
+					li2.click(function(){
+						$(this).remove();
+					});
+					li3.click(function(){
+						$(this).remove();
+					});
+					
+					//A.append(B) : A에 B를추가
+					//B.appendTo(A) : B를  A에 추가
+					li1.appendTo($("ul"));
+					$("ul").append(li2);
+					$("ul").append(li3);
+				});
+				
+				$("input:eq(1)").click(function(){
+					$("ul").empty();
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<input type="button" value="추가">
+		<input type="button" value="삭제">
+		<!-- 동적 요소 추가 -->
+		<ul></ul>
+	</body>
+</html>

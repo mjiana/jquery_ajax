@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>submenu</title>
+
+		<!-- 모바일 웹 페이지 설정 -->
+		<link rel="shortcut icon" href="img/icon.png" />
+		<link rel="apple-touch-icon" href="img/icon.png" />
+		<!-- 모바일 웹 페이지 설정 끝 -->
+
+		<!--[if lt IE 9]>
+		<script src="js/html5shiv.js"></script>
+		<![endif]-->
+
+		<style type="text/css">
+			/* 목록의 기본속성 초기화 */
+			ul{ margin: 0; padding: 0; list-style: none;}
+			
+			/* 목록아이템의 가로배치 및 크기와 배경이미지 지정 */
+			ul.menu li{ 
+				float: left; 
+				width: 179px; 
+				height: 48px; 
+				background: url("img/btn.png"); 
+			}
+			
+			/* 메뉴 링크의 크기 지정 및 글자 꾸미기 */
+			ul.menu li a{
+				display: block;
+				width: 100%;
+				height: 100%;
+				line-height: 48px;
+				text-align: center;
+				font-weight: bold;
+				color: #cfdfb5;
+				text-decoration: none;
+			}
+			
+			/* 마우스가 올라간 링크에 대한 배경이미지 변경 */
+			ul.menu li a:hover{ background: url("img/btn_over.png"); }
+			
+			/* 가로배치에 사용된 float속성 해제 */
+			ul.menu:after{
+				content: '';
+				display: block;
+				clear: both;
+				float: none;
+			}
+		</style>
+
+		<!-- jQuery Framework 참조하기 -->
+		<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+		<!-- 사용자 스크립트 블록 -->
+		<script type="text/javascript">
+			$(function(){
+				//모든 서브메뉴 숨기기
+				$("ul.menu > li > .sub").hide();
+				
+				$("ul.menu > li").hover(function(){
+					//마우스가 올라간 현재 요소의 하위 요소 중 sub클래스를 가진 요소 찾기
+					//찾은 요소에 slideDown 애니메이션 적용
+					$(this).find(".sub").slideDown(300);
+				}, function(){
+					//모든 서브메뉴 숨기기
+					$("ul.menu > li > .sub").slideUp(300);
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<ul class="menu">
+			<li>
+				<a href="#">메뉴A</a>
+				<ul class="sub">
+					<li><a href="#">서브메뉴A</a></li>
+					<li><a href="#">서브메뉴A</a></li>
+					<li><a href="#">서브메뉴A</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">메뉴B</a>
+				<ul class="sub">
+					<li><a href="#">서브메뉴B</a></li>
+					<li><a href="#">서브메뉴B</a></li>
+					<li><a href="#">서브메뉴B</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">메뉴C</a>
+				<ul class="sub">
+					<li><a href="#">서브메뉴C</a></li>
+					<li><a href="#">서브메뉴C</a></li>
+					<li><a href="#">서브메뉴C</a></li>
+				</ul>
+			</li>
+		</ul>
+	</body>
+</html>

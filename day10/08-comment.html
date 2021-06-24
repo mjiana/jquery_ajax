@@ -139,7 +139,7 @@
 			
 			$(function(){
 				//기본 덧글 목록 불러오기
-				$.get("ajax/comment/comment_list.xml", {}, function(data){
+				$.get("ajax/comment/comment_list.jsp", {}, function(data){
 					//읽은 xml에서 "item"태그를 찾아 반복처리
 					$(data).find("item").each(function(){
 						var num = $(this).find("num").text();
@@ -193,7 +193,8 @@
 						
 						//결과 새 목록으로 출력
 						addNewItem(num, writer, content, datetime);
-						alert(num);
+						alert($(xml).find("message").text());
+						//alert("글 등록번호 : "+num);
 					}).fail(function(){
 						alert("덧글 작성에 실패하였습니다.");
 					});
@@ -202,6 +203,7 @@
 				
 				//삭제버튼 클릭시 항목삭제 "미리" 지정
 				$(document).on("click",".delete_btn",function(){
+					alert("삭제할 번호 : "+num+"/"+target);
 					if(confirm("삭제하시겠습니까?")){
 						/* 덧글삭제  테스트 */
 						/* 무조건 성공 */
@@ -215,7 +217,7 @@
 						var num = $(this).parent("li").attr("data-num");
 						//삭제 제거대상 : 클릭된 버튼 기준 "content-item"클래스를 갖는 상위요소
 						var target = $(this).parents(".comment_item");
-						alert(num+"/"+target);
+						
 						//글번호를 통한 삭제 요청
 						$.post(url, {"num":num}, function(xml){
 							//result -> boolean
